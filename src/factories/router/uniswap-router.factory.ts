@@ -484,7 +484,8 @@ export class UniswapRouterFactory {
     ethAmountIn: BigNumber,
     tokenAmount: BigNumber,
     routeQuoteTradeContext: RouteQuoteTradeContext,
-    deadline: string
+    deadline: string,
+    transferFee: boolean = false
   ): string {
     // uniswap adds extra digits on even if the token is say 8 digits long
     const convertedMinTokens = tokenAmount
@@ -493,6 +494,16 @@ export class UniswapRouterFactory {
 
     switch (routeQuoteTradeContext.uniswapVersion) {
       case UniswapVersion.v2:
+        if (transferFee) {
+          return this._uniswapRouterContractFactoryV2.swapExactETHForTokensSupportingFeeOnTransferTokens(
+            hexlify(convertedMinTokens),
+            routeQuoteTradeContext.routePathArray.map((r) =>
+              removeEthFromContractAddress(r)
+            ),
+            this._ethereumAddress,
+            deadline
+          );
+        }
         return this._uniswapRouterContractFactoryV2.swapExactETHForTokens(
           hexlify(convertedMinTokens),
           routeQuoteTradeContext.routePathArray.map((r) =>
@@ -569,7 +580,8 @@ export class UniswapRouterFactory {
     tokenAmount: BigNumber,
     ethAmountOutMin: BigNumber,
     routeQuoteTradeContext: RouteQuoteTradeContext,
-    deadline: string
+    deadline: string,
+    transferFee: boolean = false
   ): string {
     // uniswap adds extra digits on even if the token is say 8 digits long
     const amountIn = tokenAmount
@@ -578,6 +590,17 @@ export class UniswapRouterFactory {
 
     switch (routeQuoteTradeContext.uniswapVersion) {
       case UniswapVersion.v2:
+        if (transferFee) {
+          return this._uniswapRouterContractFactoryV2.swapExactTokensForETHSupportingFeeOnTransferTokens(
+            hexlify(amountIn),
+            hexlify(parseEther(ethAmountOutMin)),
+            routeQuoteTradeContext.routePathArray.map((r) =>
+              removeEthFromContractAddress(r)
+            ),
+            this._ethereumAddress,
+            deadline
+          );
+        }
         return this._uniswapRouterContractFactoryV2.swapExactTokensForETH(
           hexlify(amountIn),
           hexlify(parseEther(ethAmountOutMin)),
@@ -657,7 +680,8 @@ export class UniswapRouterFactory {
     tokenAmount: BigNumber,
     tokenAmountMin: BigNumber,
     routeQuoteTradeContext: RouteQuoteTradeContext,
-    deadline: string
+    deadline: string,
+    transferFee: boolean = false
   ): string {
     // uniswap adds extra digits on even if the token is say 8 digits long
     const amountIn = tokenAmount
@@ -669,6 +693,15 @@ export class UniswapRouterFactory {
 
     switch (routeQuoteTradeContext.uniswapVersion) {
       case UniswapVersion.v2:
+        if (transferFee) {
+          return this._uniswapRouterContractFactoryV2.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            hexlify(amountIn),
+            hexlify(amountMin),
+            routeQuoteTradeContext.routePathArray,
+            this._ethereumAddress,
+            deadline
+          );
+        }
         return this._uniswapRouterContractFactoryV2.swapExactTokensForTokens(
           hexlify(amountIn),
           hexlify(amountMin),
@@ -1807,7 +1840,8 @@ export class UniswapRouterFactory {
             amountToTrade,
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),
             routeQuoteTradeContext,
-            tradeExpires.toString()
+            tradeExpires.toString(),
+            true //todo: make it dynamic
           )
         : this.generateTradeDataErc20ToEthOutput(
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),

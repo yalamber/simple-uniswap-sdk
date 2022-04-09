@@ -236,7 +236,6 @@ export class UniswapRouterContractFactoryV2 {
   }
 
   public swapExactETHForTokensSupportingFeeOnTransferTokens(
-    amountIn: BigNumberish,
     amountOutMin: BigNumberish,
     path: string[],
     to: string,
@@ -244,7 +243,7 @@ export class UniswapRouterContractFactoryV2 {
   ): string {
     return this._uniswapRouterContract.interface.encodeFunctionData(
       'swapExactETHForTokensSupportingFeeOnTransferTokens',
-      [amountIn, amountOutMin, path, to, deadline]
+      [amountOutMin, path, to, deadline]
     );
   }
 
