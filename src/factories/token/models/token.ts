@@ -6,4 +6,5 @@ export interface Token {
   decimals: number;
   symbol: string;
   name: string;
+  hasTransferFee?: boolean;
 }

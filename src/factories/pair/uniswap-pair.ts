@@ -38,6 +38,8 @@ export class UniswapPair {
       );
     }
 
+    console.log('here context', this._uniswapPairContext);
+
     this._uniswapPairContext.fromTokenContractAddress = getAddress(
       this._uniswapPairContext.fromTokenContractAddress,
       true
