@@ -6,7 +6,6 @@ interface UniswapPairContextBase {
     ethereumAddress: string;
     settings?: UniswapPairSettings | undefined;
     fromTrasferFee?: boolean;
-    toTransferFee?: boolean;
 }
 export interface UniswapPairContextForEthereumProvider extends UniswapPairContextBase {
     ethereumProvider: any;

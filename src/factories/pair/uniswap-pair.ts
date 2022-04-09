@@ -38,8 +38,6 @@ export class UniswapPair {
       );
     }
 
-    console.log('here context', this._uniswapPairContext);
-
     this._uniswapPairContext.fromTokenContractAddress = getAddress(
       this._uniswapPairContext.fromTokenContractAddress,
       true
@@ -164,6 +162,9 @@ export class UniswapPair {
       ethereumAddress: this._uniswapPairContext.ethereumAddress,
       settings: this._uniswapPairContext.settings || new UniswapPairSettings(),
       ethersProvider: this._ethersProvider,
+      fromTrasferFee: this._uniswapPairContext.fromTrasferFee
+        ? this._uniswapPairContext.fromTrasferFee
+        : false,
     };
 
     return new UniswapPairFactory(new CoinGecko(), uniswapFactoryContext);

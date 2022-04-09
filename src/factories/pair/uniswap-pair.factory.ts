@@ -128,11 +128,13 @@ export class UniswapPairFactory {
   ): Promise<TradeContext> {
     switch (this.tradePath()) {
       case TradePath.erc20ToEth:
-        return await this.findBestPriceAndPathErc20ToEth(amount, direction);
+        return await this.findBestPriceAndPathErc20ToEth(amount, direction,
+          this._uniswapPairFactoryContext.fromTrasferFee);
       case TradePath.ethToErc20:
         return await this.findBestPriceAndPathEthToErc20(amount, direction);
       case TradePath.erc20ToErc20:
-        return await this.findBestPriceAndPathErc20ToErc20(amount, direction);
+        return await this.findBestPriceAndPathErc20ToErc20(amount, direction,
+          this._uniswapPairFactoryContext.fromTrasferFee);
       default:
         throw new UniswapError(
           `${this.tradePath()} is not defined`,
@@ -182,7 +184,8 @@ export class UniswapPairFactory {
   ): Promise<BestRouteQuotes> {
     return await this._routes.findBestRoute(
       new BigNumber(amountToTrade),
-      direction
+      direction,
+      this._uniswapPairFactoryContext.fromTrasferFee
     );
   }
 
@@ -197,7 +200,8 @@ export class UniswapPairFactory {
   ): Promise<RouteQuote[]> {
     return await this._routes.getAllPossibleRoutesWithQuotes(
       new BigNumber(amountToTrade),
-      direction
+      direction,
+      this._uniswapPairFactoryContext.fromTrasferFee
     );
   }
 
@@ -311,11 +315,13 @@ export class UniswapPairFactory {
    */
   private async findBestPriceAndPathErc20ToEth(
     baseConvertRequest: BigNumber,
-    direction: TradeDirection
+    direction: TradeDirection,
+    fromTrasferFee: boolean
   ): Promise<TradeContext> {
     const bestRouteQuotes = await this._routes.findBestRoute(
       baseConvertRequest,
-      direction
+      direction,
+      fromTrasferFee
     );
 
     const bestRouteQuote = bestRouteQuotes.bestRouteQuote;

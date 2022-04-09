@@ -308,7 +308,8 @@ export class UniswapRouterFactory {
    */
   public async getAllPossibleRoutesWithQuotes(
     amountToTrade: BigNumber,
-    direction: TradeDirection
+    direction: TradeDirection,
+    fromTrasferFee: boolean
   ): Promise<RouteQuote[]> {
     const tradeAmount = this.formatAmountToTrade(amountToTrade, direction);
 
@@ -382,7 +383,8 @@ export class UniswapRouterFactory {
     return this.buildRouteQuotesFromResults(
       amountToTrade,
       contractCallResults,
-      direction
+      direction,
+      fromTrasferFee
     );
   }
 
@@ -393,11 +395,13 @@ export class UniswapRouterFactory {
    */
   public async findBestRoute(
     amountToTrade: BigNumber,
-    direction: TradeDirection
+    direction: TradeDirection,
+    fromTrasferFee: boolean
   ): Promise<BestRouteQuotes> {
     let allRoutes = await this.getAllPossibleRoutesWithQuotes(
       amountToTrade,
-      direction
+      direction,
+      fromTrasferFee
     );
 
     if (allRoutes.length === 0) {
@@ -1444,7 +1448,8 @@ export class UniswapRouterFactory {
   private buildRouteQuotesFromResults(
     amountToTrade: BigNumber,
     contractCallResults: ContractCallResults,
-    direction: TradeDirection
+    direction: TradeDirection,
+    fromTrasferFee: boolean
   ): RouteQuote[] {
     const tradePath = this.tradePath();
 
@@ -1492,7 +1497,8 @@ export class UniswapRouterFactory {
                   ],
                   direction,
                   contractCallReturnContext.originalContractCallContext
-                    .reference as UniswapVersion
+                    .reference as UniswapVersion,
+                  fromTrasferFee
                 )
               );
               break;
@@ -1506,7 +1512,8 @@ export class UniswapRouterFactory {
                   ],
                   direction,
                   contractCallReturnContext.originalContractCallContext
-                    .reference as UniswapVersion
+                    .reference as UniswapVersion,
+                  fromTrasferFee
                 )
               );
               break;
@@ -1565,7 +1572,8 @@ export class UniswapRouterFactory {
     callReturnContext: CallReturnContext,
     routeContext: RouteContext,
     direction: TradeDirection,
-    uniswapVersion: UniswapVersion
+    uniswapVersion: UniswapVersion,
+    fromTrasferFee: boolean
   ): RouteQuote {
     const convertQuoteUnformatted = this.getConvertQuoteUnformatted(
       callReturnContext,
@@ -1603,7 +1611,7 @@ export class UniswapRouterFactory {
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),
             routeQuoteTradeContext,
             tradeExpires.toString(),
-            true// TODO make it dynamic
+            fromTrasferFee
           )
         : this.generateTradeDataErc20ToErc20Output(
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),
@@ -1805,7 +1813,8 @@ export class UniswapRouterFactory {
     callReturnContext: CallReturnContext,
     routeContext: RouteContext,
     direction: TradeDirection,
-    uniswapVersion: UniswapVersion
+    uniswapVersion: UniswapVersion,
+    fromTrasferFee: boolean
   ): RouteQuote {
     const convertQuoteUnformatted = this.getConvertQuoteUnformatted(
       callReturnContext,
@@ -1842,7 +1851,7 @@ export class UniswapRouterFactory {
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),
             routeQuoteTradeContext,
             tradeExpires.toString(),
-            true //todo: make it dynamic
+            fromTrasferFee
           )
         : this.generateTradeDataErc20ToEthOutput(
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),
