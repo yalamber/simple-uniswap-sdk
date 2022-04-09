@@ -131,8 +131,8 @@ export class UniswapPairFactory {
         return await this.findBestPriceAndPathErc20ToEth(
           amount,
           direction,
-          this._uniswapPairFactoryContext.fromTrasferFee
-            ? this._uniswapPairFactoryContext.fromTrasferFee
+          this._uniswapPairFactoryContext.fromTransferFee
+            ? this._uniswapPairFactoryContext.fromTransferFee
             : false
         );
       case TradePath.ethToErc20:
@@ -195,7 +195,9 @@ export class UniswapPairFactory {
     return await this._routes.findBestRoute(
       new BigNumber(amountToTrade),
       direction,
-      this._uniswapPairFactoryContext.fromTrasferFee
+      this._uniswapPairFactoryContext.fromTransferFee
+        ? this._uniswapPairFactoryContext.fromTransferFee
+        : false
     );
   }
 
@@ -211,7 +213,9 @@ export class UniswapPairFactory {
     return await this._routes.getAllPossibleRoutesWithQuotes(
       new BigNumber(amountToTrade),
       direction,
-      this._uniswapPairFactoryContext.fromTrasferFee
+      this._uniswapPairFactoryContext.fromTransferFee
+        ? this._uniswapPairFactoryContext.fromTransferFee
+        : false
     );
   }
 
@@ -471,7 +475,8 @@ export class UniswapPairFactory {
   ): Promise<TradeContext> {
     const bestRouteQuotes = await this._routes.findBestRoute(
       baseConvertRequest,
-      direction
+      direction,
+      false
     );
     const bestRouteQuote = bestRouteQuotes.bestRouteQuote;
 

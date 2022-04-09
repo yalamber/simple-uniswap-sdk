@@ -162,7 +162,7 @@ export class UniswapPair {
       ethereumAddress: this._uniswapPairContext.ethereumAddress,
       settings: this._uniswapPairContext.settings || new UniswapPairSettings(),
       ethersProvider: this._ethersProvider,
-      fromTrasferFee: this._uniswapPairContext.fromTrasferFee
+      fromTransferFee: this._uniswapPairContext.fromTrasferFee
         ? this._uniswapPairContext.fromTrasferFee
         : false,
     };

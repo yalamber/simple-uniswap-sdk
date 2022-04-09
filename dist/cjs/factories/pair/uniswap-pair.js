@@ -57,7 +57,6 @@ var UniswapPair = /** @class */ (function () {
         if (!is_address_1.isAddress(this._uniswapPairContext.fromTokenContractAddress)) {
             throw new uniswap_error_1.UniswapError('`fromTokenContractAddress` is not a valid contract address', error_codes_1.ErrorCodes.fromTokenContractAddressNotValid);
         }
-        console.log('here context', this._uniswapPairContext);
         this._uniswapPairContext.fromTokenContractAddress = get_address_1.getAddress(this._uniswapPairContext.fromTokenContractAddress, true);
         if (!this._uniswapPairContext.toTokenContractAddress) {
             throw new uniswap_error_1.UniswapError('Must have a `toTokenContractAddress` on the context', error_codes_1.ErrorCodes.toTokenContractAddressRequired);
@@ -138,6 +137,9 @@ var UniswapPair = /** @class */ (function () {
                             ethereumAddress: this._uniswapPairContext.ethereumAddress,
                             settings: this._uniswapPairContext.settings || new uniswap_pair_settings_1.UniswapPairSettings(),
                             ethersProvider: this._ethersProvider,
+                            fromTransferFee: this._uniswapPairContext.fromTrasferFee
+                                ? this._uniswapPairContext.fromTrasferFee
+                                : false,
                         };
                         return [2 /*return*/, new uniswap_pair_factory_1.UniswapPairFactory(new coin_gecko_1.CoinGecko(), uniswapFactoryContext)];
                 }

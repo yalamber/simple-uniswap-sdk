@@ -7,4 +7,5 @@ export interface UniswapPairFactoryContext {
     ethereumAddress: string;
     settings: UniswapPairSettings;
     ethersProvider: EthersProvider;
+    fromTransferFee?: boolean;
 }

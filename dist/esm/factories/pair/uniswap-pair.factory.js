@@ -154,11 +154,15 @@ var UniswapPairFactory = /** @class */ (function () {
                             case TradePath.erc20ToErc20: return [3 /*break*/, 5];
                         }
                         return [3 /*break*/, 7];
-                    case 1: return [4 /*yield*/, this.findBestPriceAndPathErc20ToEth(amount, direction)];
+                    case 1: return [4 /*yield*/, this.findBestPriceAndPathErc20ToEth(amount, direction, this._uniswapPairFactoryContext.fromTransferFee
+                            ? this._uniswapPairFactoryContext.fromTransferFee
+                            : false)];
                     case 2: return [2 /*return*/, _b.sent()];
                     case 3: return [4 /*yield*/, this.findBestPriceAndPathEthToErc20(amount, direction)];
                     case 4: return [2 /*return*/, _b.sent()];
-                    case 5: return [4 /*yield*/, this.findBestPriceAndPathErc20ToErc20(amount, direction)];
+                    case 5: return [4 /*yield*/, this.findBestPriceAndPathErc20ToErc20(amount, direction, this._uniswapPairFactoryContext.fromTransferFee
+                            ? this._uniswapPairFactoryContext.fromTransferFee
+                            : false)];
                     case 6: return [2 /*return*/, _b.sent()];
                     case 7: throw new UniswapError(this.tradePath() + " is not defined", ErrorCodes.tradePathIsNotSupported);
                 }
@@ -207,7 +211,9 @@ var UniswapPairFactory = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._routes.findBestRoute(new BigNumber(amountToTrade), direction)];
+                    case 0: return [4 /*yield*/, this._routes.findBestRoute(new BigNumber(amountToTrade), direction, this._uniswapPairFactoryContext.fromTransferFee
+                            ? this._uniswapPairFactoryContext.fromTransferFee
+                            : false)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -222,7 +228,9 @@ var UniswapPairFactory = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._routes.getAllPossibleRoutesWithQuotes(new BigNumber(amountToTrade), direction)];
+                    case 0: return [4 /*yield*/, this._routes.getAllPossibleRoutesWithQuotes(new BigNumber(amountToTrade), direction, this._uniswapPairFactoryContext.fromTransferFee
+                            ? this._uniswapPairFactoryContext.fromTransferFee
+                            : false)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -346,7 +354,7 @@ var UniswapPairFactory = /** @class */ (function () {
      * @param baseConvertRequest The base convert request can be both input or output direction
      * @param direction The direction you want to get the quote from
      */
-    UniswapPairFactory.prototype.findBestPriceAndPathErc20ToEth = function (baseConvertRequest, direction) {
+    UniswapPairFactory.prototype.findBestPriceAndPathErc20ToEth = function (baseConvertRequest, direction, fromTrasferFee) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
             var bestRouteQuotes, bestRouteQuote, tradeContext, _c;
@@ -354,7 +362,7 @@ var UniswapPairFactory = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_e) {
                 switch (_e.label) {
-                    case 0: return [4 /*yield*/, this._routes.findBestRoute(baseConvertRequest, direction)];
+                    case 0: return [4 /*yield*/, this._routes.findBestRoute(baseConvertRequest, direction, fromTrasferFee)];
                     case 1:
                         bestRouteQuotes = _e.sent();
                         bestRouteQuote = bestRouteQuotes.bestRouteQuote;
@@ -420,14 +428,14 @@ var UniswapPairFactory = /** @class */ (function () {
      * @param baseConvertRequest The base convert request can be both input or output direction
      * @param direction The direction you want to get the quote from
      */
-    UniswapPairFactory.prototype.findBestPriceAndPathErc20ToErc20 = function (baseConvertRequest, direction) {
+    UniswapPairFactory.prototype.findBestPriceAndPathErc20ToErc20 = function (baseConvertRequest, direction, fromTransferFee) {
         return __awaiter(this, void 0, void 0, function () {
             var bestRouteQuotes, bestRouteQuote, tradeContext, _a;
             var _b;
             var _this = this;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4 /*yield*/, this._routes.findBestRoute(baseConvertRequest, direction)];
+                    case 0: return [4 /*yield*/, this._routes.findBestRoute(baseConvertRequest, direction, fromTransferFee)];
                     case 1:
                         bestRouteQuotes = _c.sent();
                         bestRouteQuote = bestRouteQuotes.bestRouteQuote;
@@ -498,7 +506,7 @@ var UniswapPairFactory = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_c) {
                 switch (_c.label) {
-                    case 0: return [4 /*yield*/, this._routes.findBestRoute(baseConvertRequest, direction)];
+                    case 0: return [4 /*yield*/, this._routes.findBestRoute(baseConvertRequest, direction, false)];
                     case 1:
                         bestRouteQuotes = _c.sent();
                         bestRouteQuote = bestRouteQuotes.bestRouteQuote;

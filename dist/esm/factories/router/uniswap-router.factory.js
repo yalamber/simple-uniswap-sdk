@@ -243,7 +243,7 @@ var UniswapRouterFactory = /** @class */ (function () {
      * @param amountToTrade The amount to trade
      * @param direction The direction you want to get the quote from
      */
-    UniswapRouterFactory.prototype.getAllPossibleRoutesWithQuotes = function (amountToTrade, direction) {
+    UniswapRouterFactory.prototype.getAllPossibleRoutesWithQuotes = function (amountToTrade, direction, fromTrasferFee) {
         return __awaiter(this, void 0, void 0, function () {
             var tradeAmount, routes, contractCallContext, i, routeCombo, i, routeCombo, contractCallResults;
             return __generator(this, function (_a) {
@@ -305,7 +305,7 @@ var UniswapRouterFactory = /** @class */ (function () {
                         return [4 /*yield*/, this._multicall.call(contractCallContext)];
                     case 2:
                         contractCallResults = _a.sent();
-                        return [2 /*return*/, this.buildRouteQuotesFromResults(amountToTrade, contractCallResults, direction)];
+                        return [2 /*return*/, this.buildRouteQuotesFromResults(amountToTrade, contractCallResults, direction, fromTrasferFee)];
                 }
             });
         });
@@ -315,12 +315,12 @@ var UniswapRouterFactory = /** @class */ (function () {
      * @param amountToTrade The amount they want to trade
      * @param direction The direction you want to get the quote from
      */
-    UniswapRouterFactory.prototype.findBestRoute = function (amountToTrade, direction) {
+    UniswapRouterFactory.prototype.findBestRoute = function (amountToTrade, direction, fromTrasferFee) {
         return __awaiter(this, void 0, void 0, function () {
             var allRoutes, allowanceAndBalances;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getAllPossibleRoutesWithQuotes(amountToTrade, direction)];
+                    case 0: return [4 /*yield*/, this.getAllPossibleRoutesWithQuotes(amountToTrade, direction, fromTrasferFee)];
                     case 1:
                         allRoutes = _a.sent();
                         if (allRoutes.length === 0) {
@@ -1027,7 +1027,7 @@ var UniswapRouterFactory = /** @class */ (function () {
      * @param contractCallResults The contract call results
      * @param direction The direction you want to get the quote from
      */
-    UniswapRouterFactory.prototype.buildRouteQuotesFromResults = function (amountToTrade, contractCallResults, direction) {
+    UniswapRouterFactory.prototype.buildRouteQuotesFromResults = function (amountToTrade, contractCallResults, direction, fromTrasferFee) {
         var tradePath = this.tradePath();
         var result = [];
         for (var key in contractCallResults.results) {
@@ -1046,11 +1046,11 @@ var UniswapRouterFactory = /** @class */ (function () {
                             break;
                         case TradePath.erc20ToEth:
                             result.push(this.buildRouteQuoteForErc20ToEth(amountToTrade, callReturnContext, contractCallReturnContext.originalContractCallContext.context[i], direction, contractCallReturnContext.originalContractCallContext
-                                .reference));
+                                .reference, fromTrasferFee));
                             break;
                         case TradePath.erc20ToErc20:
                             result.push(this.buildRouteQuoteForErc20ToErc20(amountToTrade, callReturnContext, contractCallReturnContext.originalContractCallContext.context[i], direction, contractCallReturnContext.originalContractCallContext
-                                .reference));
+                                .reference, fromTrasferFee));
                             break;
                         default:
                             throw new UniswapError(tradePath + " not found", ErrorCodes.tradePathIsNotSupported);
@@ -1086,7 +1086,7 @@ var UniswapRouterFactory = /** @class */ (function () {
      * @param direction The direction you want to get the quote from
      * @param uniswapVersion The uniswap version
      */
-    UniswapRouterFactory.prototype.buildRouteQuoteForErc20ToErc20 = function (amountToTrade, callReturnContext, routeContext, direction, uniswapVersion) {
+    UniswapRouterFactory.prototype.buildRouteQuoteForErc20ToErc20 = function (amountToTrade, callReturnContext, routeContext, direction, uniswapVersion, fromTrasferFee) {
         var _this = this;
         var convertQuoteUnformatted = this.getConvertQuoteUnformatted(callReturnContext, direction, uniswapVersion);
         var expectedConvertQuote = direction === TradeDirection.input
@@ -1104,8 +1104,7 @@ var UniswapRouterFactory = /** @class */ (function () {
             routePathArray: callReturnContext.methodParameters[1],
         };
         var data = direction === TradeDirection.input
-            ? this.generateTradeDataErc20ToErc20Input(amountToTrade, new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage), routeQuoteTradeContext, tradeExpires.toString(), true // TODO make it dynamic
-            )
+            ? this.generateTradeDataErc20ToErc20Input(amountToTrade, new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage), routeQuoteTradeContext, tradeExpires.toString(), fromTrasferFee)
             : this.generateTradeDataErc20ToErc20Output(new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage), amountToTrade, routeQuoteTradeContext, tradeExpires.toString());
         var transaction = this.buildUpTransactionErc20(uniswapVersion, data);
         switch (uniswapVersion) {
@@ -1239,7 +1238,7 @@ var UniswapRouterFactory = /** @class */ (function () {
      * @param direction The direction you want to get the quote from
      * @param uniswapVersion The uniswap version
      */
-    UniswapRouterFactory.prototype.buildRouteQuoteForErc20ToEth = function (amountToTrade, callReturnContext, routeContext, direction, uniswapVersion) {
+    UniswapRouterFactory.prototype.buildRouteQuoteForErc20ToEth = function (amountToTrade, callReturnContext, routeContext, direction, uniswapVersion, fromTrasferFee) {
         var _this = this;
         var _a, _b, _c, _d;
         var convertQuoteUnformatted = this.getConvertQuoteUnformatted(callReturnContext, direction, uniswapVersion);
@@ -1256,8 +1255,7 @@ var UniswapRouterFactory = /** @class */ (function () {
             routePathArray: callReturnContext.methodParameters[1],
         };
         var data = direction === TradeDirection.input
-            ? this.generateTradeDataErc20ToEthInput(amountToTrade, new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage), routeQuoteTradeContext, tradeExpires.toString(), true //todo: make it dynamic
-            )
+            ? this.generateTradeDataErc20ToEthInput(amountToTrade, new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage), routeQuoteTradeContext, tradeExpires.toString(), fromTrasferFee)
             : this.generateTradeDataErc20ToEthOutput(new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage), amountToTrade, routeQuoteTradeContext, tradeExpires.toString());
         var transaction = this.buildUpTransactionErc20(uniswapVersion, data);
         switch (uniswapVersion) {

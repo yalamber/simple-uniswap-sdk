@@ -30,13 +30,13 @@ export declare class UniswapRouterFactory {
      * @param amountToTrade The amount to trade
      * @param direction The direction you want to get the quote from
      */
-    getAllPossibleRoutesWithQuotes(amountToTrade: BigNumber, direction: TradeDirection): Promise<RouteQuote[]>;
+    getAllPossibleRoutesWithQuotes(amountToTrade: BigNumber, direction: TradeDirection, fromTrasferFee: boolean): Promise<RouteQuote[]>;
     /**
      * Finds the best route
      * @param amountToTrade The amount they want to trade
      * @param direction The direction you want to get the quote from
      */
-    findBestRoute(amountToTrade: BigNumber, direction: TradeDirection): Promise<BestRouteQuotes>;
+    findBestRoute(amountToTrade: BigNumber, direction: TradeDirection, fromTrasferFee: boolean): Promise<BestRouteQuotes>;
     /**
      * Generates the trade datetime unix time
      */
