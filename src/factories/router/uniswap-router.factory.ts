@@ -591,7 +591,7 @@ export class UniswapRouterFactory {
     switch (routeQuoteTradeContext.uniswapVersion) {
       case UniswapVersion.v2:
         if (transferFee) {
-          console.log("applying transferFee")
+          console.log('applying transferFee');
           return this._uniswapRouterContractFactoryV2.swapExactTokensForETHSupportingFeeOnTransferTokens(
             hexlify(amountIn),
             hexlify(parseEther(ethAmountOutMin)),
@@ -1603,7 +1603,8 @@ export class UniswapRouterFactory {
             amountToTrade,
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),
             routeQuoteTradeContext,
-            tradeExpires.toString()
+            tradeExpires.toString(),
+            true
           )
         : this.generateTradeDataErc20ToErc20Output(
             new BigNumber(expectedConvertQuoteOrTokenAmountInMaxWithSlippage),
